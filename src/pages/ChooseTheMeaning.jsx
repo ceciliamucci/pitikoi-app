@@ -1,3 +1,4 @@
+import { playSound } from '../audio.js';
 import React, { useState } from 'react';
 import { activeMeaningQuestions as questionBank } from '../data/phrasalVerbQuestions.js';
 import { prepareAttempt } from '../utils/shuffle.js';
@@ -12,17 +13,20 @@ export default function ChooseTheMeaning() {
 
   function answer(optionIndex) {
     if (selected !== null) return;
+    playSound(optionIndex === question.answer ? 'click' : 'wrong');
     setSelected(optionIndex);
     if (optionIndex === question.answer) setScore(score + 1);
   }
 
   function next() {
+    playSound('next');
     setIndex(index + 1);
     setSelected(null);
     window.scrollTo(0, 0);
   }
 
   function restart() {
+    playSound('next');
     setQuestions(prepareAttempt(questionBank));
     setIndex(0);
     setSelected(null);

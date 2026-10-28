@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import { playSound } from '../audio.js';
+import React, { useRef, useState } from 'react';
+import SentenceOptions from '../components/SentenceOptions.jsx';
 import { activeSentenceQuestions as questionBank } from '../data/phrasalVerbQuestions.js';
 import { prepareAttempt } from '../utils/shuffle.js';
 import PhrasalFeedback from '../components/PhrasalFeedback.jsx';
 
-export default function CompleteTheSentence() {
+export default function CompleteTheSentence({ active = true }) {
+  const dropRef = useRef(null);
+  const [dragState, setDragState] = useState(null);
   const [sentenceQuestions, setQuestions] = useState(() => prepareAttempt(questionBank));
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState(null);
@@ -11,13 +15,22 @@ export default function CompleteTheSentence() {
   const [score, setScore] = useState(0);
   const question = sentenceQuestions[index];
 
+  function selectOption(optionIndex, dropped) {
+    if (checked) return;
+    if (dropped) playSound('drop');
+    else if (selected !== optionIndex) playSound('click');
+    setSelected(optionIndex);
+  }
+
   function checkAnswer() {
     if (selected === null || checked) return;
+    playSound(selected === question.answer ? 'next' : 'wrong');
     setChecked(true);
     if (selected === question.answer) setScore(score + 1);
   }
 
   function next() {
+    playSound('next');
     setIndex(index + 1);
     setSelected(null);
     setChecked(false);
@@ -25,6 +38,7 @@ export default function CompleteTheSentence() {
   }
 
   function restart() {
+    playSound('next');
     setQuestions(prepareAttempt(questionBank));
     setIndex(0);
     setSelected(null);
@@ -37,7 +51,7 @@ export default function CompleteTheSentence() {
   function renderLine(text) {
     if (!text.includes('___')) return text;
     const [before, after] = text.split('___');
-    return <>{before}<span className={`conversation-blank ${checked ? (selected === question.answer ? 'blank-correct' : 'blank-wrong') : ''}`} aria-label={selected === null ? 'Missing expression' : undefined}>{selected === null ? '…' : question.options[selected].text}</span>{after}</>;
+    return <>{before}<span ref={dropRef} className={`conversation-blank sentence-gap ${dragState ? 'drop-active' : ''} ${dragState === 'over' ? 'drop-over' : ''} ${checked ? (selected === question.answer ? 'blank-correct' : 'blank-wrong') : ''}`} aria-label={selected === null ? 'Missing expression' : undefined}>{selected === null ? '…' : question.options[selected].text}</span>{after}</>;
   }
 
   if (!question) return (
@@ -63,16 +77,8 @@ export default function CompleteTheSentence() {
           ))}
         </div>
       ) : <div className="question-card scenario-card"><p>{renderLine(question.scenario)}</p></div>}
-      <p id="sentence-instruction">Tap an expression to fill the gap.</p>
-      <div className="expression-options" role="group" aria-labelledby="sentence-instruction">
-        {question.options.map((option, optionIndex) => (
-          <button key={option.text}
-            className={`quiz-option ${selected === optionIndex ? 'is-selected' : ''} ${checked && optionIndex === question.answer ? 'is-correct' : ''} ${checked && selected === optionIndex && selected !== question.answer ? 'is-wrong' : ''}`}
-            aria-pressed={selected === optionIndex} disabled={checked} onClick={() => setSelected(optionIndex)}>
-            {option.text}
-          </button>
-        ))}
-      </div>
+      <SentenceOptions key={index} question={question} selected={selected} checked={checked} active={active}
+        dropRef={dropRef} onSelect={selectOption} onDragState={setDragState} />
       {checked ? <>
         <PhrasalFeedback question={question} selected={selected} />
         <button className="primary-button" onClick={next}>{index === sentenceQuestions.length - 1 ? 'See results' : 'Next'}</button>

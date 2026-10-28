@@ -1,4 +1,5 @@
-﻿import React, { useState } from 'react';
+﻿import { playSound } from '../audio.js';
+import React, { useState } from 'react';
 import { createQuestions } from '../data/irregularVerbs.js';
 
 export default function VerbQuiz() {
@@ -13,6 +14,7 @@ export default function VerbQuiz() {
 
   function toggle(option) {
     if (checked) return;
+    if (selected.includes(option) || question.answers.length === 1 || selected.length < question.answers.length) playSound('click');
     if (selected.includes(option)) setSelected(selected.filter((item) => item !== option));
     else if (question.answers.length === 1) setSelected([option]);
     else if (selected.length < question.answers.length) setSelected([...selected, option]);
@@ -21,18 +23,21 @@ export default function VerbQuiz() {
   function checkAnswer() {
     if (checked || selected.length !== question.answers.length) return;
     const correct = question.answers.every((answer) => selected.includes(answer));
+    playSound(correct ? 'next' : 'wrong');
     if (correct) setScore(score + 1);
     setStreak(correct ? streak + 1 : 0);
     setChecked(true);
   }
 
   function next() {
+    playSound('next');
     setIndex(index + 1);
     setSelected([]);
     setChecked(false);
   }
 
   function restart() {
+    playSound('next');
     setQuestions(createQuestions());
     setIndex(0);
     setSelected([]);

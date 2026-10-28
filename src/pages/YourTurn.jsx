@@ -1,3 +1,4 @@
+import { playSound } from '../audio.js';
 import React, { useState } from 'react';
 import { yourTurnQuestions } from '../data/yourTurnQuestions.js';
 import { getIdiom } from '../data/idiomsExpressions.js';
@@ -12,17 +13,22 @@ export default function YourTurn({ onBack }) {
   const correct = selected?.isCorrect === true;
 
   function answer(option) {
-    if (!correct) setSelected(option);
+    if (!correct) {
+      playSound(option.isCorrect ? 'click' : 'wrong');
+      setSelected(option);
+    }
   }
 
   function next() {
     if (!correct) return;
+    playSound('next');
     setIndex(index + 1);
     setSelected(null);
     window.scrollTo(0, 0);
   }
 
   function restart() {
+    playSound('next');
     setQuestions(prepareAttempt(yourTurnQuestions));
     setIndex(0);
     setSelected(null);

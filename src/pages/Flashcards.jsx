@@ -1,4 +1,5 @@
-﻿import React, { useState } from 'react';
+﻿import { playSound } from '../audio.js';
+import React, { useState } from 'react';
 import { verbs, shuffle } from '../data/irregularVerbs.js';
 
 export default function Flashcards() {
@@ -11,12 +12,14 @@ export default function Flashcards() {
 
   function nextCard(knew) {
     if (!revealed) return;
+    playSound(knew ? 'next' : 'click');
     if (knew) setKnown(known + 1);
     setRevealed(false);
     setIndex(index + 1);
   }
 
   function restart() {
+    playSound('next');
     setDeck(shuffle(verbs));
     setIndex(0);
     setRevealed(false);
@@ -34,7 +37,7 @@ export default function Flashcards() {
   return (
     <main className="practice-content">
       <p className="session-count">{known} known</p>
-      <button key={index} className={`flashcard ${revealed ? 'is-flipped' : ''}`} onClick={() => setRevealed(!revealed)} aria-label={revealed ? 'Show base form' : 'Reveal conjugations'} aria-pressed={revealed}>
+      <button key={index} className={`flashcard ${revealed ? 'is-flipped' : ''}`} onClick={() => { playSound('click'); setRevealed(!revealed); }} aria-label={revealed ? 'Show base form' : 'Reveal conjugations'} aria-pressed={revealed}>
         <span className="flashcard-inner">
           <span className="flashcard-face" aria-hidden={revealed}>
             <span className="card-label">Base form</span>
@@ -56,7 +59,7 @@ export default function Flashcards() {
           <button className="secondary-button" onClick={() => nextCard(false)}>I missed it</button>
           <button className="primary-button" onClick={() => nextCard(true)}>I knew it</button>
         </div>
-      ) : <button className="primary-button" onClick={() => setRevealed(true)}>Reveal</button>}
+      ) : <button className="primary-button" onClick={() => { playSound('next'); setRevealed(true); }}>Reveal</button>}
     </main>
   );
 }

@@ -1,0 +1,85 @@
+/* Temas exclusivos de categorías. Bordes definitivos por categoría.
+   Las pantallas generales conservan sus colores. */
+.practice-screen[data-category] {
+  --text: #080808;
+  --orange: #F66434;
+  --button-bg: #FF8B64;
+  --correct: #94E29A;
+  --correct-border: #337455;
+  --incorrect: #f7dce1;
+  --incorrect-border: #ab3e4c;
+  --answer-bg: var(--card);
+  --answer-border: var(--card-border);
+  --card-border: var(--outline);
+  --cloud-correct-fill: var(--correct);
+  --cloud-correct-border: var(--correct-border);
+  --cloud-wrong-fill: var(--incorrect);
+  --cloud-wrong-border: var(--incorrect-border);
+  background: var(--page-bg);
+  color: var(--text);
+}
+
+.practice-screen[data-category="irregular"] {
+  --outline: #E5D0F2;
+  --page-bg: #E7EFE9;
+  --card: #F4E3FF;
+}
+.practice-screen[data-category="irregular"] .sound-toggle {
+  background: #E5D0F2;
+  border-radius: 50%;
+}
+.practice-screen[data-category="phrasal"] {
+  --outline: #94E29A;
+  --page-bg: #9CD7ED;
+  --card: #BFFBC3;
+}
+.practice-screen[data-category="idioms"] {
+  --outline: #FF7777;
+  --page-bg: #777FC5;
+  --card: #EFA7A7;
+}
+
+
+.practice-screen .quiz-option { background: var(--answer-bg); border-color: var(--answer-border); }
+/* El contorno interior y aria-pressed distinguen selección de acierto/error. */
+.practice-screen .quiz-option.is-selected { background: var(--answer-bg); border-color: var(--outline); box-shadow: inset 0 0 0 2px var(--outline); }
+.practice-screen .quiz-option.is-correct,
+.practice-screen .decode-option.is-correct,
+.practice-screen .blank-correct { background: var(--correct); border-color: var(--correct-border); }
+.practice-screen .quiz-option.is-wrong,
+.practice-screen .decode-option.is-wrong,
+.practice-screen .blank-wrong { background: var(--incorrect); border-color: var(--incorrect-border); }
+
+.practice-screen .conjugation,
+.practice-screen .reply .conversation-bubble { background: var(--card); }
+.practice-screen .phrasal-feedback,
+.practice-screen .phrasal-sense blockquote { background: var(--card); }
+.practice-screen .pitikoi-tip { background: var(--page-bg); }
+
+/* Decode conserva sus opciones blancas y usa el outline de Idioms. */
+.practice-screen .decode-option { --answer-bg: white; background: var(--answer-bg); border-color: var(--answer-border); }
+.practice-screen .decode-option.is-correct { background: var(--correct); border-color: var(--correct-border); }
+.practice-screen .decode-option.is-wrong { background: var(--incorrect); border-color: var(--incorrect-border); }
+
+/* Los PNG contienen solo las criaturas: no necesitan el recorte del logo.
+   Se conserva la opacidad decorativa existente, sin definir una nueva. */
+.creature-decoration {
+  position: fixed;
+  width: clamp(190px, 45vw, 280px);
+  height: clamp(190px, 45vw, 280px);
+  /* Compensa la scrollbar de desktop: el anclaje no salta al abrir una lista. */
+  right: calc(100% - 100vw + env(safe-area-inset-right, 0px));
+  bottom: env(safe-area-inset-bottom, 0px);
+  overflow: hidden;
+  pointer-events: none;
+}
+.creature-decoration img { width: 100%; height: auto; transform: translate(12%, 8%); }
+.practice-screen .phrasal-sense + .phrasal-sense { border-color: var(--outline); }
+.practice-screen .phrasal-sense blockquote { border-color: var(--outline); }
+.practice-screen .conversation-blank:not(.blank-correct):not(.blank-wrong) { border-color: var(--outline); }
+.practice-screen button:focus-visible,
+.practice-screen .verb-search:focus-visible,
+.practice-screen .phrasal-summary:focus-visible { outline-color: var(--outline); }
+.practice-screen .access-card:hover { border-color: var(--outline); }
+.practice-screen .quiz-option.is-correct,
+.practice-screen .quiz-option.is-wrong { box-shadow: none; }

@@ -10,6 +10,22 @@
 
 * { box-sizing: border-box; }
 body { margin: 0; }
+/* Mantiene los intentos en memoria sin mostrar ni enfocar pantallas inactivas. */
+.activity-session { display: contents; }
+.activity-session[hidden] { display: none; }
+.sentence-options .quiz-option { touch-action: none; user-select: none; -webkit-user-select: none; cursor: grab; }
+.sentence-options .quiz-option:disabled { cursor: default; }
+.sentence-options .is-drag-source { opacity: .6; cursor: grabbing; }
+.sentence-gap { display: inline-block; min-width: 64px; min-height: 44px; text-align: center; }
+.sentence-gap.drop-active { outline: 2px dashed var(--orange); outline-offset: 4px; }
+.sentence-gap.drop-over { outline-style: solid; }
+.sentence-drag-preview { position: fixed; z-index: 10; pointer-events: none; padding: 14px; border: 3px solid var(--card-border); border-radius: 16px; background: var(--card); font-size: 17px; font-weight: 700; text-align: center; }
+.sound-toggle { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; padding: 11px; border: 0; border-radius: 0; background: transparent; box-shadow: none; opacity: 1; transition: none; cursor: pointer; }
+.sound-toggle img { width: 22px; height: 22px; display: block; }
+.sound-toggle.is-faded { opacity: .5; transition: opacity 250ms ease; }
+.activity-nav > .sound-toggle { margin-left: auto; }
+.general-sound { position: absolute; top: 12px; left: 16px; z-index: 2; }
+@media (prefers-reduced-motion: reduce) { .sound-toggle, .sound-toggle.is-faded { transition: none; } }
 button { font: inherit; cursor: pointer; }
 button:focus-visible { outline: 3px solid #703c86; outline-offset: 5px; }
 
@@ -94,7 +110,7 @@ h1 {
 .form-fields label { font-size: 20px; text-align: right; }
 .form-fields input { width: 100%; min-width: 0; min-height: 42px; padding: 8px 10px; border: 3px solid var(--card-border); border-radius: 14px; background: white; font: inherit; }
 .form-fields input:focus-visible { outline: 3px solid #703c86; outline-offset: 3px; }
-.primary-button { display: block; width: 100%; min-height: 48px; padding: 8px 14px; border: 3px solid var(--orange); border-radius: 15px; background: #ff8c63; color: #fff; font-size: 22px; font-weight: 700; }
+.primary-button { display: block; width: 100%; min-height: 48px; padding: 8px 14px; border: 3px solid #F66434; border-radius: 15px; background: #FF8B64; color: #fff; font-size: 22px; font-weight: 700; }
 .primary-button:hover { background: #ff9b77; }
 .auth-content .primary-button { margin-top: 48px; }
 .auth-link { display: block; margin: 10px auto 0; text-align: center; }
