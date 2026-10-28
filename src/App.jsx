@@ -29,6 +29,7 @@ import YourTurn from './pages/YourTurn.jsx';
 const demoAccount = { username: 'admin', password: '1234', name: 'Admin' };
 
 export default function App() {
+  const screenRef = useRef(null);
   const [muted, setMuted] = useState(readMuted);
   useEffect(() => {
     const quiet = () => stopSound();
@@ -105,6 +106,11 @@ export default function App() {
   }, [user]);
 
   useLayoutEffect(() => {
+    // iOS puede pintar las zonas seguras con el fondo del documento.
+    // Leer el tema aplicado evita duplicar las paletas en JavaScript.
+    const background = getComputedStyle(screenRef.current).backgroundColor;
+    document.documentElement.style.setProperty('--document-background', background);
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', background);
     window.scrollTo(0, scrollPositions.current[page] || 0);
   }, [page]);
 
@@ -149,7 +155,7 @@ export default function App() {
   }
 
   return (
-    <div className={`screen ${page}-screen ${isPractice ? 'practice-screen' : ''}`} data-category={category || undefined}>
+    <div ref={screenRef} className={`screen ${page}-screen ${isPractice ? 'practice-screen' : ''}`} data-category={category || undefined}>
       <div className="page-container">
         {isPractice && (
           <nav className="activity-nav" aria-label="Practice navigation">

@@ -24,7 +24,7 @@ body { margin: 0; }
 .sound-toggle img { width: 22px; height: 22px; display: block; }
 .sound-toggle.is-faded { opacity: .5; transition: opacity 250ms ease; }
 .activity-nav > .sound-toggle { margin-left: auto; }
-.general-sound { position: absolute; top: 12px; left: 16px; z-index: 2; }
+.general-sound { position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); left: 16px; z-index: 2; }
 @media (prefers-reduced-motion: reduce) { .sound-toggle, .sound-toggle.is-faded { transition: none; } }
 button { font: inherit; cursor: pointer; }
 button:focus-visible { outline: 3px solid #703c86; outline-offset: 5px; }
@@ -41,7 +41,9 @@ button:focus-visible { outline: 3px solid #703c86; outline-offset: 5px; }
   min-height: 100vh;
   min-height: 100svh;
   margin: 0 auto;
-  padding-bottom: 112px;
+  /* Dentro del min-height existente: no sumamos otro viewport ni alturas fijas. */
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: max(112px, env(safe-area-inset-bottom, 0px));
 }
 
 .top-nav { display: flex; justify-content: flex-end; padding: 14px 20px; }
